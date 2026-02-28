@@ -39,3 +39,18 @@ def test_alert_continues_past_reminder_time() -> None:
 
     assert buzzer.on is True
     assert led.on is True
+
+
+def test_button_press_dismisses_alert() -> None:
+    clock = FakeClock(hour=14, minute=0)
+    buzzer = FakeBuzzer()
+    led = FakeLed()
+    button = FakeButton()
+    reminder = FocusReminder(clock, buzzer, led, button, reminder_hour=14, reminder_minute=0)
+
+    reminder.tick()  # starts alerting
+    button.press()
+    reminder.tick()  # should dismiss
+
+    assert buzzer.on is False
+    assert led.on is False
