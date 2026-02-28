@@ -13,3 +13,16 @@ def test_no_alert_before_reminder_time() -> None:
 
     assert buzzer.on is False
     assert led.on is False
+
+
+def test_alert_starts_at_reminder_time() -> None:
+    clock = FakeClock(hour=14, minute=0)
+    buzzer = FakeBuzzer()
+    led = FakeLed()
+    button = FakeButton()
+    reminder = FocusReminder(clock, buzzer, led, button, reminder_hour=14, reminder_minute=0)
+
+    reminder.tick()
+
+    assert buzzer.on is True
+    assert led.on is True

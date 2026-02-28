@@ -19,4 +19,7 @@ class FocusReminder:
         self._reminder_minute = reminder_minute
 
     def tick(self) -> None:
-        pass
+        hour, minute = self._clock.current_time()
+        if (hour, minute) >= (self._reminder_hour, self._reminder_minute):
+            self._buzzer.beep_on()
+            self._led.flash_on()
