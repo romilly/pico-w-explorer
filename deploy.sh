@@ -11,5 +11,6 @@ echo "Deploying pico_w_explorer to Pico W..."
 mpremote \
     cp -r src/pico_w_explorer/ :pico_w_explorer/ + \
     cp src/pico_w_explorer/main.py :main.py + \
+    cp src/pico_w_explorer/WIFI_CONFIG.py :WIFI_CONFIG.py + \
     soft-reset
 echo "Deployed. Device will restart and run main.py."
