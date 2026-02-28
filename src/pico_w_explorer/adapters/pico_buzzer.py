@@ -1,5 +1,5 @@
 from machine import Pin  # type: ignore[import-not-found]
-from pimoroni import Speaker  # type: ignore[import-not-found]
+from pimoroni import Buzzer as Speaker  # type: ignore[import-not-found]
 
 from pico_w_explorer.ports import BuzzerPort
 
