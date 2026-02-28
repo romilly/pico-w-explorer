@@ -80,3 +80,26 @@ def test_alert_stays_dismissed_after_button_release(fix: ReminderFixture) -> Non
 
     assert fix.buzzer.on is False
     assert fix.led.on is False
+
+
+def test_dismissed_resets_next_day(fix: ReminderFixture) -> None:
+    fix.clock.set_time(14, 0)
+    reminder = fix.create()
+
+    reminder.tick()  # starts alerting
+    fix.button.press()
+    reminder.tick()  # dismisses
+    fix.button.release()
+
+    # Next day, before reminder time — still silent
+    fix.clock.set_day(2)
+    fix.clock.set_time(13, 0)
+    reminder.tick()
+    assert fix.buzzer.on is False
+    assert fix.led.on is False
+
+    # Next day, at reminder time — alert fires again
+    fix.clock.set_time(14, 0)
+    reminder.tick()
+    assert fix.buzzer.on is True
+    assert fix.led.on is True

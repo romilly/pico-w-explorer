@@ -18,11 +18,17 @@ class FocusReminder:
         self._reminder_hour = reminder_hour
         self._reminder_minute = reminder_minute
         self._dismissed = False
+        self._dismissed_on_day: int | None = None
 
     def tick(self) -> None:
         hour, minute = self._clock.current_time()
+        today = self._clock.current_date()
+        if self._dismissed and today != self._dismissed_on_day:
+            self._dismissed = False
+            self._dismissed_on_day = None
         if self._button.is_pressed():
             self._dismissed = True
+            self._dismissed_on_day = today
             self._buzzer.beep_off()
             self._led.flash_off()
         elif not self._dismissed and (hour, minute) >= (self._reminder_hour, self._reminder_minute):
