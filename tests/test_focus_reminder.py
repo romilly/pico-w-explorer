@@ -103,3 +103,20 @@ def test_dismissed_resets_next_day(fix: ReminderFixture) -> None:
     reminder.tick()
     assert fix.buzzer.on is True
     assert fix.led.on is True
+
+
+def test_alert_toggles_on_each_tick(fix: ReminderFixture) -> None:
+    fix.clock.set_time(14, 0)
+    reminder = fix.create()
+
+    reminder.tick()  # first tick — on
+    assert fix.buzzer.on is True
+    assert fix.led.on is True
+
+    reminder.tick()  # second tick — off
+    assert fix.buzzer.on is False
+    assert fix.led.on is False
+
+    reminder.tick()  # third tick — on again
+    assert fix.buzzer.on is True
+    assert fix.led.on is True
