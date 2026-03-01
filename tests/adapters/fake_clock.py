@@ -17,5 +17,14 @@ class FakeClock(ClockPort):
     def current_time(self) -> tuple[int, int]:
         return (self._hour, self._minute)
 
+    def tick(self) -> None:
+        self._minute += 1
+        if self._minute >= 60:
+            self._minute = 0
+            self._hour += 1
+            if self._hour >= 24:
+                self._hour = 0
+                self._day += 1
+
     def current_date(self) -> int:
         return self._day

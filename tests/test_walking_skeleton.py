@@ -1,30 +1,50 @@
 from tests.builders import ApplicationBuilder
 
 
-def test_full_application_lifecycle() -> None:
-    builder = ApplicationBuilder().with_time(13, 0)
-    app = builder.build()
-    app.start()
+class TestFullApplicationLifecycle:
+    def setup_method(self) -> None:
+        builder = ApplicationBuilder().with_time(13, 0)
+        self.clock = builder.clock
+        self.buzzer = builder.buzzer
+        self.led = builder.led
+        self.button = builder.button
+        self.app = builder.build()
+        self.app.start()
 
-    # Before reminder time — no alert
-    app.tick()
-    assert builder.buzzer.on is False
-    assert builder.led.on is False
+    def wait(self, minutes: int = 1) -> None:
+        for _ in range(minutes):
+            self.clock.tick()
+            self.app.tick()
 
-    # At reminder time — alert activates
-    builder.clock.set_time(14, 0)
-    app.tick()
-    assert builder.buzzer.on is True
-    assert builder.led.on is True
+    def press_button(self) -> None:
+        self.button.press()
 
-    # Button press — alert dismissed
-    builder.button.press()
-    app.tick()
-    assert builder.buzzer.on is False
-    assert builder.led.on is False
+    def release_button(self) -> None:
+        self.button.release()
 
-    # Stays dismissed after button release
-    builder.button.release()
-    app.tick()
-    assert builder.buzzer.on is False
-    assert builder.led.on is False
+    def assert_alerting(self) -> None:
+        assert self.buzzer.on is True
+        assert self.led.on is True
+
+    def assert_silent(self) -> None:
+        assert self.buzzer.on is False
+        assert self.led.on is False
+
+    def test_full_lifecycle(self) -> None:
+        # Before reminder — silent
+        self.wait(minutes=30)
+        self.assert_silent()
+
+        # At reminder time (14:00) — alerting
+        self.wait(minutes=30)
+        self.assert_alerting()
+
+        # Button press — dismissed
+        self.press_button()
+        self.wait()
+        self.assert_silent()
+
+        # Stays dismissed after release
+        self.release_button()
+        self.wait()
+        self.assert_silent()
