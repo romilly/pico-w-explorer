@@ -64,6 +64,18 @@ def test_builder_custom_reminder_time() -> None:
     assert builder.buzzer.on is True
 
 
+def test_start_displays_multiple_reminder_times() -> None:
+    builder = ApplicationBuilder().with_reminder_times([(9, 0), (14, 0)]).with_time(8, 0)
+    app = builder.build()
+
+    app.start()
+
+    assert_that(builder.display.texts[1],
+                equal_to("Clock synced\n08:00\nReminders at 09:00, 14:00"))
+    assert_that(builder.display.texts[2],
+                equal_to("Running...\nReminders at 09:00, 14:00"))
+
+
 def test_start_displays_custom_reminder_time() -> None:
     builder = ApplicationBuilder().with_reminder_time(9, 30).with_time(8, 15)
     app = builder.build()

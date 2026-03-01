@@ -9,7 +9,6 @@ app = Application(
     led=PicoLed(),
     button=PicoButton(),
     display=PicoDisplay(),
-    reminder_hour=16,
-    reminder_minute=0,
+    reminder_times=[(16, 0)],
 )
 app.run()

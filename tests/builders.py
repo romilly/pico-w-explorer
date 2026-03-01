@@ -13,8 +13,7 @@ class ApplicationBuilder:
         self.led = FakeLed()
         self.button = FakeButton()
         self.display = FakeDisplay()
-        self._reminder_hour = 14
-        self._reminder_minute = 0
+        self._reminder_times: list[tuple[int, int]] = [(14, 0)]
 
     def with_clock(self, clock: FakeClock) -> 'ApplicationBuilder':
         self.clock = clock
@@ -45,8 +44,11 @@ class ApplicationBuilder:
         return self
 
     def with_reminder_time(self, hour: int, minute: int) -> 'ApplicationBuilder':
-        self._reminder_hour = hour
-        self._reminder_minute = minute
+        self._reminder_times = [(hour, minute)]
+        return self
+
+    def with_reminder_times(self, times: list[tuple[int, int]]) -> 'ApplicationBuilder':
+        self._reminder_times = times
         return self
 
     def build(self) -> Application:
@@ -56,6 +58,5 @@ class ApplicationBuilder:
             led=self.led,
             button=self.button,
             display=self.display,
-            reminder_hour=self._reminder_hour,
-            reminder_minute=self._reminder_minute,
+            reminder_times=self._reminder_times,
         )

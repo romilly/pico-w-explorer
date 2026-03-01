@@ -12,8 +12,7 @@ class Application:
         led: LedPort,
         button: ButtonPort,
         display: DisplayPort,
-        reminder_hour: int,
-        reminder_minute: int,
+        reminder_times: list[tuple[int, int]],
         tick_interval: float = 0.5,
     ) -> None:
         self._clock = clock
@@ -21,24 +20,27 @@ class Application:
         self._led = led
         self._button = button
         self._display = display
-        self._reminder_hour = reminder_hour
-        self._reminder_minute = reminder_minute
+        self._reminder_times = sorted(reminder_times)
         self._tick_interval = tick_interval
+
+    def _format_times(self) -> str:
+        if len(self._reminder_times) == 1:
+            h, m = self._reminder_times[0]
+            return "Reminder at %02d:%02d" % (h, m)
+        parts = ", ".join("%02d:%02d" % (h, m) for h, m in self._reminder_times)
+        return "Reminders at " + parts
 
     def start(self) -> None:
         self._display.show_text("Connecting to WiFi...")
         hour, minute = self._clock.current_time()
+        times_str = self._format_times()
         self._display.show_text(
-            "Clock synced\n%02d:%02d\nReminder at %02d:%02d"
-            % (hour, minute, self._reminder_hour, self._reminder_minute)
+            "Clock synced\n%02d:%02d\n%s" % (hour, minute, times_str)
         )
-        self._display.show_text(
-            "Running...\nReminder at %02d:%02d"
-            % (self._reminder_hour, self._reminder_minute)
-        )
+        self._display.show_text("Running...\n%s" % times_str)
         self._reminder = FocusReminder(
             self._clock, self._buzzer, self._led, self._button,
-            self._reminder_hour, self._reminder_minute,
+            reminder_times=self._reminder_times,
         )
 
     def tick(self) -> None:
