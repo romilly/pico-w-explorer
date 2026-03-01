@@ -13,8 +13,7 @@ def test_start_displays_connecting_message() -> None:
 
 
 def test_start_displays_clock_sync_info() -> None:
-    builder = ApplicationBuilder()
-    builder.clock.set_time(10, 30)
+    builder = ApplicationBuilder().with_time(10, 30)
     app = builder.build()
 
     app.start()
@@ -34,8 +33,7 @@ def test_start_displays_running_message() -> None:
 
 
 def test_tick_activates_alert_at_reminder_time() -> None:
-    builder = ApplicationBuilder()
-    builder.clock.set_time(14, 0)
+    builder = ApplicationBuilder().with_time(14, 0)
     app = builder.build()
     app.start()
 
@@ -46,8 +44,7 @@ def test_tick_activates_alert_at_reminder_time() -> None:
 
 
 def test_tick_no_alert_before_reminder_time() -> None:
-    builder = ApplicationBuilder()
-    builder.clock.set_time(13, 0)
+    builder = ApplicationBuilder().with_time(13, 0)
     app = builder.build()
     app.start()
 
@@ -58,8 +55,7 @@ def test_tick_no_alert_before_reminder_time() -> None:
 
 
 def test_builder_custom_reminder_time() -> None:
-    builder = ApplicationBuilder().with_reminder_time(9, 30)
-    builder.clock.set_time(9, 30)
+    builder = ApplicationBuilder().with_reminder_time(9, 30).with_time(9, 30)
     app = builder.build()
     app.start()
 
@@ -69,8 +65,7 @@ def test_builder_custom_reminder_time() -> None:
 
 
 def test_start_displays_custom_reminder_time() -> None:
-    builder = ApplicationBuilder().with_reminder_time(9, 30)
-    builder.clock.set_time(8, 15)
+    builder = ApplicationBuilder().with_reminder_time(9, 30).with_time(8, 15)
     app = builder.build()
 
     app.start()

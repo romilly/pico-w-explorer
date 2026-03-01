@@ -36,6 +36,14 @@ class ApplicationBuilder:
         self.display = display
         return self
 
+    def with_time(self, hour: int, minute: int) -> 'ApplicationBuilder':
+        self.clock.set_time(hour, minute)
+        return self
+
+    def with_day(self, day: int) -> 'ApplicationBuilder':
+        self.clock.set_day(day)
+        return self
+
     def with_reminder_time(self, hour: int, minute: int) -> 'ApplicationBuilder':
         self._reminder_hour = hour
         self._reminder_minute = minute

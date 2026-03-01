@@ -2,8 +2,7 @@ from tests.builders import ApplicationBuilder
 
 
 def test_full_application_lifecycle() -> None:
-    builder = ApplicationBuilder()
-    builder.clock.set_time(13, 0)
+    builder = ApplicationBuilder().with_time(13, 0)
     app = builder.build()
     app.start()
 
