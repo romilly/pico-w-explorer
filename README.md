@@ -4,7 +4,9 @@ Code for the Pimoroni Pico W Explorer board.
 
 ## Focus Reminder
 
-A daily focus reminder that flashes the onboard LED and beeps the speaker at a configured time (default 16:00 UTC). Press Button A to dismiss. The alert resets automatically the next day.
+A daily focus reminder that flashes the onboard LED and beeps the buzzer at configured times. Supports multiple independently-dismissible alerts per day. Press Button A to dismiss the current alert. Each alert resets automatically the next day.
+
+Currently configured for reminders at 12:45 and 16:00 UTC.
 
 Built using hexagonal architecture with ports and adapters, developed test-first with TDD.
 
@@ -12,14 +14,18 @@ Built using hexagonal architecture with ports and adapters, developed test-first
 
 ```
 src/pico_w_explorer/
-    ports/          # Port interfaces (clock, buzzer, led, button)
-    adapters/       # Real Pico W hardware adapters
-    focus_reminder.py   # Domain logic
-    main.py         # Entry point for the Pico
+    ports/              # Port interfaces (clock, buzzer, led, button, display)
+    adapters/           # Real Pico W hardware adapters
+    application.py      # Application wiring and run loop
+    focus_reminder.py   # Domain logic (AlertState, FocusReminder)
+    main.py             # Entry point for the Pico
 tests/
-    adapters/       # Fake adapters for testing
+    adapters/           # Fake adapters for testing
+    builders.py         # ApplicationBuilder for test setup
     test_focus_reminder.py
     test_walking_skeleton.py
+docs/
+    tick-driven-testing.md  # Integration testing pattern
 ```
 
 ## Deployment
@@ -32,6 +38,14 @@ Requires [mpremote](https://docs.micropython.org/en/latest/reference/mpremote.ht
 
 This copies the package to the Pico and restarts it. The device connects to WiFi, syncs the clock via NTP, and runs the reminder loop.
 
+## WiFi Configuration
+
+Copy the example config and fill in your credentials:
+
+```bash
+cp src/pico_w_explorer/WIFI_CONFIG.py.example src/pico_w_explorer/WIFI_CONFIG.py
+```
+
 ## Development
 
 ```bash
@@ -43,5 +57,5 @@ pip install -r requirements-test.txt
 pytest
 
 # Type check domain code
-pyright src/pico_w_explorer/ports/ src/pico_w_explorer/focus_reminder.py
+pyright src/pico_w_explorer/ports/ src/pico_w_explorer/focus_reminder.py src/pico_w_explorer/application.py
 ```
