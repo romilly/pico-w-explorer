@@ -16,7 +16,7 @@ class PicoDisplay(DisplayPort):
         DISPLAY.set_thickness(2)
         width = DISPLAY.measure_text(text, scale)
         DISPLAY.set_pen(BLACK_PEN)
-        DISPLAY.rectangle(x, y - 10, width, 30)
+        DISPLAY.rectangle(x, y - 11, width + 2, 32)
         pen = DISPLAY.create_pen(colour.red, colour.green, colour.blue)
         DISPLAY.set_pen(pen)
         DISPLAY.text(text, x, y, 300, scale)
