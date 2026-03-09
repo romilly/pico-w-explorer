@@ -2,6 +2,7 @@ import time
 
 from pico_w_explorer.focus_reminder import FocusReminder
 from pico_w_explorer.ports import BuzzerPort, ButtonPort, ClockPort, DisplayPort, LedPort
+from pico_w_explorer.widgets import Text
 
 
 class Application:
@@ -22,22 +23,27 @@ class Application:
         self._display = display
         self._reminder_times = sorted(reminder_times)
         self._tick_interval = tick_interval
+        self._status = Text(display, 3, 20)
+        self._reminders =Text(display, 3, 60)
+        self._times = Text(display, 3, 100)
 
     def _format_times(self) -> str:
-        if len(self._reminder_times) == 1:
-            h, m = self._reminder_times[0]
-            return "Reminder at %02d:%02d" % (h, m)
         parts = ", ".join("%02d:%02d" % (h, m) for h, m in self._reminder_times)
-        return "Reminders at " + parts
+        return parts
+    
+    def status(self, contents: str):
+        self._status.text(contents)
+
+    def reminders(self):
+        self._reminders.text("Reminders:")
+
+    def times(self, times: str):
+        self._times.text(times)
 
     def start(self) -> None:
-        self._display.show_text("Connecting to WiFi...")
-        hour, minute = self._clock.current_time()
-        times_str = self._format_times()
-        self._display.show_text(
-            "Clock synced\n%02d:%02d\n%s" % (hour, minute, times_str)
-        )
-        self._display.show_text("Running...\n%s" % times_str)
+        self.status("Running...")
+        self.reminders()
+        self.times(self._format_times())
         self._reminder = FocusReminder(
             self._clock, self._buzzer, self._led, self._button,
             reminder_times=self._reminder_times,

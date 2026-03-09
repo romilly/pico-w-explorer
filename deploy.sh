@@ -19,6 +19,7 @@ mpremote \
     mkdir :pico_w_explorer/adapters + \
     cp src/pico_w_explorer/__init__.py :pico_w_explorer/__init__.py + \
     cp src/pico_w_explorer/application.py :pico_w_explorer/application.py + \
+    cp src/pico_w_explorer/widgets.py :pico_w_explorer/widgets.py + \
     cp src/pico_w_explorer/focus_reminder.py :pico_w_explorer/focus_reminder.py + \
     cp src/pico_w_explorer/ports/*.py :pico_w_explorer/ports/ + \
     cp src/pico_w_explorer/adapters/*.py :pico_w_explorer/adapters/ + \
