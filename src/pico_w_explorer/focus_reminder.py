@@ -34,7 +34,7 @@ class FocusReminder:
         self._alert_on = False
 
     def tick(self) -> None:
-        hour, minute = self._clock.current_time()
+        hour, minute, _second = self._clock.current_time()
         today = self._clock.current_date()
 
         for state in self._states:

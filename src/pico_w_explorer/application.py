@@ -36,8 +36,13 @@ class Application:
         self._reminder_times = sorted(config.reminder_times)
         self._tick_interval = config.tick_interval
         self._status = Text(self._display, 3, 20)
+        self._time_display = Text(self._display, 160, 20)
         self._reminders =Text(self._display, 3, 60, colour = BLUE)
         self._times = Text(self._display, 3, 100, colour = RED)
+
+    def _format_current_time(self) -> str:
+        hour, minute, _second = self._clock.current_time()
+        return "%02d:%02d" % (hour, minute)
 
     def _format_times(self) -> str:
         parts = ", ".join("%02d:%02d" % (h, m) for h, m in self._reminder_times)
@@ -56,12 +61,16 @@ class Application:
         self.status("Running...")
         self.reminders()
         self.times(self._format_times())
+        self._time_display.text(self._format_current_time())
         self._reminder = FocusReminder(
             self._clock, self._buzzer, self._led, self._button,
             reminder_times=self._reminder_times,
         )
 
     def tick(self) -> None:
+        _hour, _minute, second = self._clock.current_time()
+        if second == 0:
+            self._time_display.text(self._format_current_time())
         self._reminder.tick()
 
     def run(self) -> None:

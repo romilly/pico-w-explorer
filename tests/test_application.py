@@ -48,6 +48,38 @@ def test_start_displays_custom_reminder_time() -> None:
     assert_that(builder.display.texts[2], equal_to("09:30"))
 
 
+def test_start_displays_current_time() -> None:
+    builder = ApplicationBuilder().with_time(10, 30)
+    app = builder.build()
+
+    app.start()
+
+    assert_that(builder.display.texts[3], equal_to("10:30"))
+
+
+def test_tick_updates_time_at_new_minute() -> None:
+    builder = ApplicationBuilder().with_time(10, 30)
+    app = builder.build()
+    app.start()
+    builder.clock.set_time(10, 31, 0)
+
+    app.tick()
+
+    assert_that(builder.display.texts[-1], equal_to("10:31"))
+
+
+def test_tick_does_not_update_time_mid_minute() -> None:
+    builder = ApplicationBuilder().with_time(10, 30)
+    app = builder.build()
+    app.start()
+    text_count_after_start = len(builder.display.texts)
+    builder.clock.set_time(10, 30, 30)
+
+    app.tick()
+
+    assert len(builder.display.texts) == text_count_after_start
+
+
 def test_tick_activates_alert_at_reminder_time() -> None:
     builder = ApplicationBuilder().with_time(14, 0)
     app = builder.build()

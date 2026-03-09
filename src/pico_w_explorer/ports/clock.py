@@ -1,5 +1,5 @@
 class ClockPort:
-    def current_time(self) -> tuple[int, int]:
+    def current_time(self) -> tuple[int, int, int]:
         raise NotImplementedError
 
     def current_date(self) -> int:

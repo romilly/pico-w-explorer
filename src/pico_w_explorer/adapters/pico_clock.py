@@ -14,9 +14,9 @@ class PicoClock(ClockPort):
             time.sleep(1)
         ntptime.settime()
 
-    def current_time(self) -> tuple[int, int]:
+    def current_time(self) -> tuple[int, int, int]:
         t = time.localtime()
-        return (t[3], t[4])
+        return (t[3], t[4], t[5])
 
     def current_date(self) -> int:
         return time.localtime()[7]
