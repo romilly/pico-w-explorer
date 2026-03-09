@@ -1,5 +1,6 @@
 import time
 
+from pico_w_explorer.colour import RED, BLUE
 from pico_w_explorer.focus_reminder import FocusReminder
 from pico_w_explorer.ports import BuzzerPort, ButtonPort, ClockPort, DisplayPort, LedPort
 from pico_w_explorer.widgets import Text
@@ -35,8 +36,8 @@ class Application:
         self._reminder_times = sorted(config.reminder_times)
         self._tick_interval = config.tick_interval
         self._status = Text(self._display, 3, 20)
-        self._reminders =Text(self._display, 3, 60)
-        self._times = Text(self._display, 3, 100)
+        self._reminders =Text(self._display, 3, 60, colour = BLUE)
+        self._times = Text(self._display, 3, 100, colour = RED)
 
     def _format_times(self) -> str:
         parts = ", ".join("%02d:%02d" % (h, m) for h, m in self._reminder_times)
