@@ -5,7 +5,7 @@ from pico_w_explorer.ports import BuzzerPort, ButtonPort, ClockPort, DisplayPort
 from pico_w_explorer.widgets import Text
 
 
-class Application:
+class ApplicationConfig:
     def __init__(
         self,
         clock: ClockPort,
@@ -16,16 +16,27 @@ class Application:
         reminder_times: list[tuple[int, int]],
         tick_interval: float = 0.5,
     ) -> None:
-        self._clock = clock
-        self._buzzer = buzzer
-        self._led = led
-        self._button = button
-        self._display = display
-        self._reminder_times = sorted(reminder_times)
-        self._tick_interval = tick_interval
-        self._status = Text(display, 3, 20)
-        self._reminders =Text(display, 3, 60)
-        self._times = Text(display, 3, 100)
+        self.clock = clock
+        self.buzzer = buzzer
+        self.led = led
+        self.button = button
+        self.display = display
+        self.reminder_times = reminder_times
+        self.tick_interval = tick_interval
+
+
+class Application:
+    def __init__(self, config: ApplicationConfig) -> None:
+        self._clock = config.clock
+        self._buzzer = config.buzzer
+        self._led = config.led
+        self._button = config.button
+        self._display = config.display
+        self._reminder_times = sorted(config.reminder_times)
+        self._tick_interval = config.tick_interval
+        self._status = Text(self._display, 3, 20)
+        self._reminders =Text(self._display, 3, 60)
+        self._times = Text(self._display, 3, 100)
 
     def _format_times(self) -> str:
         parts = ", ".join("%02d:%02d" % (h, m) for h, m in self._reminder_times)

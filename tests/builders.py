@@ -1,4 +1,4 @@
-from pico_w_explorer.application import Application
+from pico_w_explorer.application import Application, ApplicationConfig
 from tests.adapters.fake_buzzer import FakeBuzzer
 from tests.adapters.fake_button import FakeButton
 from tests.adapters.fake_clock import FakeClock
@@ -52,7 +52,7 @@ class ApplicationBuilder:
         return self
 
     def build(self) -> Application:
-        return Application(
+        config = ApplicationConfig(
             clock=self.clock,
             buzzer=self.buzzer,
             led=self.led,
@@ -60,3 +60,4 @@ class ApplicationBuilder:
             display=self.display,
             reminder_times=self._reminder_times,
         )
+        return Application(config)
