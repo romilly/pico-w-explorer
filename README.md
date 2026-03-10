@@ -4,12 +4,12 @@ Code for the Pimoroni Pico W Explorer board.
 
 ## Focus Reminder
 
-A daily focus reminder that flashes the onboard LED and beeps the buzzer at configured times. Supports multiple independently-dismissible alerts per day. Press Button A to dismiss the current alert. Each alert resets automatically the next day.
+A daily focus reminder that flashes the onboard LED and beeps the buzzer at configured times. Supports multiple independently-dismissible alerts per day. Press Button A to dismiss the current alert. Each alert resets automatically the next day. Alerts that are already past when the device powers on are silently skipped.
 
 Currently configured for reminders at 12:45, 14:00 and 16:00 UTC.
 
 The display shows:
-- **Top line**: "Running..." with a live clock (HH:MM, updates each minute)
+- **Top line**: weekday name with a live clock (HH:MM:SS, updates every tick)
 - **Reminders label** in blue
 - **Reminder times** in red
 
@@ -22,21 +22,25 @@ src/pico_w_explorer/
     ports/              # Port interfaces (clock, buzzer, led, button, display)
     adapters/           # Real Pico W hardware adapters
     application.py      # ApplicationConfig and Application (wiring and run loop)
-    colour.py           # Colour class with RGB fields and display-focused constants
+    colour.py           # Colour class with RGB values and constants
+    text_spec.py        # TextSpec class (font, colour, thickness, scale)
     focus_reminder.py   # Domain logic (AlertState, FocusReminder)
-    widgets.py          # Text widget with colour support
+    widgets.py          # Text widget with clearing and TextSpec support
     main.py             # Entry point for the Pico
 tests/
     adapters/           # Fake adapters for testing
     builders.py         # ApplicationBuilder for test setup
+    matchers.py         # Custom PyHamcrest matchers (rect, rect_list)
     test_application.py
     test_colour.py
     test_focus_reminder.py
+    test_text_spec.py
+    test_widgets.py
     test_walking_skeleton.py
 docs/
     tick-driven-testing.md  # Integration testing pattern
 plan/
-    progress-2026-03-09.md  # Latest progress report
+    progress-2026-03-10.md  # Latest progress report
 ```
 
 ## Deployment
@@ -67,5 +71,5 @@ pip install -r requirements-test.txt
 pytest
 
 # Type check domain code
-pyright src/pico_w_explorer/ports/ src/pico_w_explorer/focus_reminder.py src/pico_w_explorer/application.py src/pico_w_explorer/colour.py src/pico_w_explorer/widgets.py
+pyright src/pico_w_explorer/ports/ src/pico_w_explorer/focus_reminder.py src/pico_w_explorer/application.py src/pico_w_explorer/colour.py src/pico_w_explorer/text_spec.py src/pico_w_explorer/widgets.py
 ```
