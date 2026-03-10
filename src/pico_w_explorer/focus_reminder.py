@@ -62,10 +62,11 @@ class FocusReminder:
 
         if self._alert_on:
             self._alert_off()
-        else:
-            self._alert_on = True
-            self._buzzer.beep_on()
-            self._led.flash_on()
+            return
+
+        self._alert_on = True
+        self._buzzer.beep_on()
+        self._led.flash_on()
 
     def _alert_off(self) -> None:
         self._alert_on = False
