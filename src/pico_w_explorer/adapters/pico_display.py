@@ -19,11 +19,6 @@ class PicoDisplay(DisplayPort):
         DISPLAY.text(text, x, y, 300, scale)
         DISPLAY.update()
 
-    def measure_text(self, text: str, scale: float = 1) -> int:
-        DISPLAY.set_font("sans")
-        DISPLAY.set_thickness(2)
-        return DISPLAY.measure_text(text, scale)
-
     def draw_rect(self, x: int, y: int, width: int, height: int, colour: Colour = WHITE) -> None:
         pen = DISPLAY.create_pen(colour.red, colour.green, colour.blue)
         DISPLAY.set_pen(pen)

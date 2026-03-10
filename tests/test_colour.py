@@ -24,7 +24,7 @@ def test_black_is_all_zero() -> None:
 
 def test_text_widget_passes_colour_to_display() -> None:
     display = FakeDisplay()
-    widget = Text(display, 10, 20, colour=RED)
+    widget = Text(display, 10, 20, width=100, colour=RED)
 
     widget.text("hello")
 
@@ -33,7 +33,7 @@ def test_text_widget_passes_colour_to_display() -> None:
 
 def test_text_widget_defaults_to_white() -> None:
     display = FakeDisplay()
-    widget = Text(display, 10, 20)
+    widget = Text(display, 10, 20, width=100)
 
     widget.text("hello")
 

@@ -35,10 +35,10 @@ class Application:
         self._display = config.display
         self._reminder_times = sorted(config.reminder_times)
         self._tick_interval = config.tick_interval
-        self._status = Text(self._display, 3, 20)
-        self._time_display = Text(self._display, 160, 20)
-        self._reminders =Text(self._display, 3, 60, colour = BLUE)
-        self._times = Text(self._display, 3, 100, colour = RED)
+        self._status = Text(self._display, 3, 20, width=120)
+        self._time_display = Text(self._display, 160, 20, width=140)
+        self._reminders = Text(self._display, 3, 60, width=120, colour=BLUE)
+        self._times = Text(self._display, 3, 100, width=230, colour=RED)
 
     def _format_current_time(self) -> str:
         hour, minute, second = self._clock.current_time()

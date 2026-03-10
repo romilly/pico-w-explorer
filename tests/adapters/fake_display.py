@@ -6,6 +6,7 @@ class FakeDisplay(DisplayPort):
     def __init__(self) -> None:
         self.last_text: str | None = None
         self.last_colour: Colour = WHITE
+        self.last_y: int = 0
         self.texts: list[str] = []
         self.rects: list[tuple[int, int, int, int, Colour]] = []
 
@@ -14,9 +15,6 @@ class FakeDisplay(DisplayPort):
         self.last_colour = colour
         self.last_y = y
         self.texts.append(text)
-
-    def measure_text(self, text: str, scale: float = 1) -> int:
-        return int(len(text) * 10 * scale)
 
     def draw_rect(self, x: int, y: int, width: int, height: int, colour: Colour = WHITE) -> None:
         self.rects.append((x, y, width, height, colour))
