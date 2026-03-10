@@ -13,6 +13,10 @@ class AlertState:
             self.dismissed = False
             self.dismissed_on_day = None
 
+    def dismiss(self, today: int) -> None:
+        self.dismissed = True
+        self.dismissed_on_day = today
+
     def is_due(self, hour: int, minute: int) -> bool:
         return (hour, minute) >= (self.hour, self.minute)
 
@@ -36,8 +40,7 @@ class FocusReminder:
         today = clock.current_date()
         for state in self._states:
             if state.is_due(hour, minute):
-                state.dismissed = True
-                state.dismissed_on_day = today
+                state.dismiss(today)
 
     def tick(self) -> None:
         hour, minute, _second = self._clock.current_time()
@@ -49,8 +52,7 @@ class FocusReminder:
         active = self._active_alert(hour, minute)
 
         if self._button.is_pressed() and active is not None:
-            active.dismissed = True
-            active.dismissed_on_day = today
+            active.dismiss(today)
             self._alert_on = False
             self._buzzer.beep_off()
             self._led.flash_off()
