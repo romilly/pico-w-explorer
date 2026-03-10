@@ -51,18 +51,21 @@ class FocusReminder:
 
         active = self._active_alert(hour, minute)
 
-        if self._button.is_pressed() and active is not None:
+        if active is None:
+            self._alert_off()
+            return
+
+        if self._button.is_pressed():
             active.dismiss(today)
             self._alert_off()
-        elif active is not None:
-            if self._alert_on:
-                self._alert_off()
-            else:
-                self._alert_on = True
-                self._buzzer.beep_on()
-                self._led.flash_on()
-        else:
+            return
+
+        if self._alert_on:
             self._alert_off()
+        else:
+            self._alert_on = True
+            self._buzzer.beep_on()
+            self._led.flash_on()
 
     def _alert_off(self) -> None:
         self._alert_on = False
