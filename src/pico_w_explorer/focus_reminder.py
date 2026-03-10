@@ -9,7 +9,7 @@ class AlertState:
         self.dismissed_on_day: int | None = None
 
     def reset_if_new_day(self, today: int) -> None:
-        if self.dismissed and today != self.dismissed_on_day:
+        if self.dismissed and self.dismissed_on_day is not None and today > self.dismissed_on_day:
             self.dismissed = False
             self.dismissed_on_day = None
 
