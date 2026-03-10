@@ -10,6 +10,11 @@ def test_colour_has_rgb_fields() -> None:
     assert colour.blue == 0
 
 
+def test_rgb_returns_tuple() -> None:
+    colour = Colour(255, 128, 0)
+    assert colour.rgb() == (255, 128, 0)
+
+
 def test_white_is_all_255() -> None:
     assert WHITE.red == 255
     assert WHITE.green == 255

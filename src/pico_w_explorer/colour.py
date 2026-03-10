@@ -4,6 +4,9 @@ class Colour:
         self.green = green
         self.blue = blue
 
+    def rgb(self) -> tuple[int, int, int]:
+        return (self.red, self.green, self.blue)
+
 
 WHITE = Colour(255, 255, 255)
 BLACK = Colour(0, 0, 0)
