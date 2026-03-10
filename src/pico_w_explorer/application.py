@@ -41,8 +41,8 @@ class Application:
         self._times = Text(self._display, 3, 100, colour = RED)
 
     def _format_current_time(self) -> str:
-        hour, minute, _second = self._clock.current_time()
-        return "%02d:%02d" % (hour, minute)
+        hour, minute, second = self._clock.current_time()
+        return "%02d:%02d:%02d" % (hour, minute, second)
 
     def _format_times(self) -> str:
         parts = ", ".join("%02d:%02d" % (h, m) for h, m in self._reminder_times)
@@ -68,9 +68,7 @@ class Application:
         )
 
     def tick(self) -> None:
-        _hour, _minute, second = self._clock.current_time()
-        if second == 0:
-            self._time_display.text(self._format_current_time())
+        self._time_display.text(self._format_current_time())
         self._reminder.tick()
 
     def run(self) -> None:

@@ -54,7 +54,7 @@ def test_start_displays_current_time() -> None:
 
     app.start()
 
-    assert_that(builder.display.texts[3], equal_to("10:30"))
+    assert_that(builder.display.texts[3], equal_to("10:30:00"))
 
 
 def test_tick_updates_time_at_new_minute() -> None:
@@ -65,19 +65,18 @@ def test_tick_updates_time_at_new_minute() -> None:
 
     app.tick()
 
-    assert_that(builder.display.texts[-1], equal_to("10:31"))
+    assert_that(builder.display.texts[-1], equal_to("10:31:00"))
 
 
-def test_tick_does_not_update_time_mid_minute() -> None:
+def test_tick_updates_time_with_seconds() -> None:
     builder = ApplicationBuilder().with_time(10, 30)
     app = builder.build()
     app.start()
-    text_count_after_start = len(builder.display.texts)
     builder.clock.set_time(10, 30, 30)
 
     app.tick()
 
-    assert len(builder.display.texts) == text_count_after_start
+    assert_that(builder.display.texts[-1], equal_to("10:30:30"))
 
 
 def test_tick_activates_alert_at_reminder_time() -> None:
