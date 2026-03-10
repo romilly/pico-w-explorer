@@ -6,12 +6,12 @@ class AlertState:
         self.hour = hour
         self.minute = minute
         self.dismissed = False
-        self.dismissed_on_day: int | None = None
+        self.dismissed_on_day: int = 0
 
     def reset_if_new_day(self, today: int) -> None:
-        if self.dismissed and self.dismissed_on_day is not None and today > self.dismissed_on_day:
+        if self.dismissed and today != self.dismissed_on_day:
             self.dismissed = False
-            self.dismissed_on_day = None
+            self.dismissed_on_day = 0
 
     def dismiss(self, today: int) -> None:
         self.dismissed = True
