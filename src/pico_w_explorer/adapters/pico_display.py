@@ -11,13 +11,21 @@ class PicoDisplay(DisplayPort):
         DISPLAY.set_pen(BLACK_PEN)
         DISPLAY.clear()
 
-    def show_text(self, text: str, x: int = 20, y: int = 20, colour: Colour = WHITE, scale: int = 1) -> None:
+    def show_text(self, text: str, x: int = 20, y: int = 20, colour: Colour = WHITE, scale: float = 1) -> None:
         DISPLAY.set_font("sans")
         DISPLAY.set_thickness(2)
-        width = DISPLAY.measure_text(text, scale)
-        DISPLAY.set_pen(BLACK_PEN)
-        DISPLAY.rectangle(x, y - 11, width + 2, 32)
         pen = DISPLAY.create_pen(colour.red, colour.green, colour.blue)
         DISPLAY.set_pen(pen)
         DISPLAY.text(text, x, y, 300, scale)
+        DISPLAY.update()
+
+    def measure_text(self, text: str, scale: float = 1) -> int:
+        DISPLAY.set_font("sans")
+        DISPLAY.set_thickness(2)
+        return DISPLAY.measure_text(text, scale)
+
+    def draw_rect(self, x: int, y: int, width: int, height: int, colour: Colour = WHITE) -> None:
+        pen = DISPLAY.create_pen(colour.red, colour.green, colour.blue)
+        DISPLAY.set_pen(pen)
+        DISPLAY.rectangle(x, y, width, height)
         DISPLAY.update()
