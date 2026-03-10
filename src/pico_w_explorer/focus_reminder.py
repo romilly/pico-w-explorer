@@ -70,7 +70,7 @@ class FocusReminder:
         self._led.flash_off()
 
     def _active_alert(self, hour: int, minute: int) -> 'AlertState | None':
-        due = [s for s in self._states if not s.dismissed and s.is_due(hour, minute)]
-        if not due:
-            return None
-        return min(due, key=lambda s: (s.hour, s.minute))
+        for state in self._states:
+            if not state.dismissed and state.is_due(hour, minute):
+                return state
+        return None
