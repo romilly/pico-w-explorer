@@ -3,6 +3,7 @@ import time
 from pico_w_explorer.colour import RED, BLUE
 from pico_w_explorer.focus_reminder import FocusReminder
 from pico_w_explorer.ports import BuzzerPort, ButtonPort, ClockPort, DisplayPort, LedPort
+from pico_w_explorer.text_spec import TextSpec
 from pico_w_explorer.widgets import Text
 
 
@@ -37,8 +38,8 @@ class Application:
         self._tick_interval = config.tick_interval
         self._status = Text(self._display, 3, 20, width=120)
         self._time_display = Text(self._display, 160, 20, width=140)
-        self._reminders = Text(self._display, 3, 60, width=120, colour=BLUE)
-        self._times = Text(self._display, 3, 100, width=230, colour=RED)
+        self._reminders = Text(self._display, 3, 60, width=120, text_spec=TextSpec(colour=BLUE))
+        self._times = Text(self._display, 3, 100, width=230, text_spec=TextSpec(colour=RED))
 
     def _format_current_time(self) -> str:
         hour, minute, second = self._clock.current_time()

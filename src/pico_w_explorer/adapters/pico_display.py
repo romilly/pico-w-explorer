@@ -2,6 +2,8 @@ from picographics import PicoGraphics, DISPLAY_PICO_W_EXPLORER  # type: ignore[i
 
 from pico_w_explorer.colour import Colour, WHITE
 from pico_w_explorer.ports import DisplayPort
+from pico_w_explorer.ports.display import DEFAULT_TEXT_SPEC
+from pico_w_explorer.text_spec import TextSpec
 
 DISPLAY = PicoGraphics(display=DISPLAY_PICO_W_EXPLORER)
 BLACK_PEN = DISPLAY.create_pen(0, 0, 0)
@@ -11,12 +13,12 @@ class PicoDisplay(DisplayPort):
         DISPLAY.set_pen(BLACK_PEN)
         DISPLAY.clear()
 
-    def show_text(self, text: str, x: int = 20, y: int = 20, colour: Colour = WHITE, scale: float = 1) -> None:
-        DISPLAY.set_font("sans")
-        DISPLAY.set_thickness(2)
-        pen = DISPLAY.create_pen(*colour.rgb())
+    def show_text(self, text: str, x: int = 20, y: int = 20, text_spec: TextSpec = DEFAULT_TEXT_SPEC) -> None:
+        DISPLAY.set_font(text_spec.font)
+        DISPLAY.set_thickness(text_spec.thickness)
+        pen = DISPLAY.create_pen(*text_spec.colour.rgb())
         DISPLAY.set_pen(pen)
-        DISPLAY.text(text, x, y, 300, scale)
+        DISPLAY.text(text, x, y, 300, text_spec.scale)
         DISPLAY.update()
 
     def draw_rect(self, x: int, y: int, width: int, height: int, colour: Colour = WHITE) -> None:
