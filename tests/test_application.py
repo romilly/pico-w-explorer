@@ -3,13 +3,13 @@ from hamcrest import assert_that, equal_to
 from tests.builders import ApplicationBuilder
 
 
-def test_start_displays_running_message() -> None:
-    builder = ApplicationBuilder()
+def test_start_displays_weekday() -> None:
+    builder = ApplicationBuilder().with_weekday(1)  # Tuesday
     app = builder.build()
 
     app.start()
 
-    assert_that(builder.display.texts[0], equal_to("Running..."))
+    assert_that(builder.display.texts[0], equal_to("Tuesday"))
 
 
 def test_start_displays_reminders_label() -> None:

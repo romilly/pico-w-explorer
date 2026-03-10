@@ -41,6 +41,11 @@ class Application:
         self._reminders = Text(self._display, 3, 60, width=120, text_spec=TextSpec(colour=BLUE))
         self._times = Text(self._display, 3, 100, width=230, text_spec=TextSpec(colour=RED))
 
+    WEEKDAYS = ("Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday")
+
+    def _format_weekday(self) -> str:
+        return self.WEEKDAYS[self._clock.weekday()]
+
     def _format_current_time(self) -> str:
         hour, minute, second = self._clock.current_time()
         return "%02d:%02d:%02d" % (hour, minute, second)
@@ -59,7 +64,7 @@ class Application:
         self._times.text(times)
 
     def start(self) -> None:
-        self.status("Running...")
+        self.status(self._format_weekday())
         self.reminders()
         self.times(self._format_times())
         self._time_display.text(self._format_current_time())

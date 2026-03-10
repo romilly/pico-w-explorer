@@ -43,6 +43,10 @@ class ApplicationBuilder:
         self.clock.set_day(day)
         return self
 
+    def with_weekday(self, weekday: int) -> 'ApplicationBuilder':
+        self.clock.set_weekday(weekday)
+        return self
+
     def with_reminder_time(self, hour: int, minute: int) -> 'ApplicationBuilder':
         self._reminder_times = [(hour, minute)]
         return self

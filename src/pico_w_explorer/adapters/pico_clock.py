@@ -20,3 +20,6 @@ class PicoClock(ClockPort):
 
     def current_date(self) -> int:
         return time.localtime()[7]
+
+    def weekday(self) -> int:
+        return time.localtime()[6]

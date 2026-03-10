@@ -4,3 +4,6 @@ class ClockPort:
 
     def current_date(self) -> int:
         raise NotImplementedError
+
+    def weekday(self) -> int:
+        raise NotImplementedError

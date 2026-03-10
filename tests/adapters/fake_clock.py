@@ -2,11 +2,12 @@ from pico_w_explorer.ports import ClockPort
 
 
 class FakeClock(ClockPort):
-    def __init__(self, hour: int = 0, minute: int = 0, second: int = 0, day: int = 1) -> None:
+    def __init__(self, hour: int = 0, minute: int = 0, second: int = 0, day: int = 1, weekday: int = 0) -> None:
         self._hour = hour
         self._minute = minute
         self._second = second
         self._day = day
+        self._weekday = weekday
 
     def set_time(self, hour: int, minute: int, second: int = 0) -> None:
         self._hour = hour
@@ -30,3 +31,9 @@ class FakeClock(ClockPort):
 
     def current_date(self) -> int:
         return self._day
+
+    def set_weekday(self, weekday: int) -> None:
+        self._weekday = weekday
+
+    def weekday(self) -> int:
+        return self._weekday
