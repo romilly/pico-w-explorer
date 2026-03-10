@@ -80,9 +80,10 @@ def test_tick_updates_time_with_seconds() -> None:
 
 
 def test_tick_activates_alert_at_reminder_time() -> None:
-    builder = ApplicationBuilder().with_time(14, 0)
+    builder = ApplicationBuilder().with_time(13, 0)
     app = builder.build()
     app.start()
+    builder.clock.set_time(14, 0, 0)
 
     app.tick()
 
@@ -102,9 +103,10 @@ def test_tick_no_alert_before_reminder_time() -> None:
 
 
 def test_builder_custom_reminder_time() -> None:
-    builder = ApplicationBuilder().with_reminder_time(9, 30).with_time(9, 30)
+    builder = ApplicationBuilder().with_reminder_time(9, 30).with_time(9, 0)
     app = builder.build()
     app.start()
+    builder.clock.set_time(9, 30, 0)
 
     app.tick()
 

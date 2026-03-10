@@ -32,6 +32,12 @@ class FocusReminder:
         self._button = button
         self._states = [AlertState(h, m) for h, m in reminder_times]
         self._alert_on = False
+        hour, minute, _second = clock.current_time()
+        today = clock.current_date()
+        for state in self._states:
+            if state.is_due(hour, minute):
+                state.dismissed = True
+                state.dismissed_on_day = today
 
     def tick(self) -> None:
         hour, minute, _second = self._clock.current_time()

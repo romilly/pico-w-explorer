@@ -39,8 +39,9 @@ def test_no_alert_before_reminder_time(fix: ReminderFixture) -> None:
 
 
 def test_alert_starts_at_reminder_time(fix: ReminderFixture) -> None:
-    fix.clock.set_time(14, 0)
+    fix.clock.set_time(13, 0)
     reminder = fix.create()
+    fix.clock.set_time(14, 0)
 
     reminder.tick()
 
@@ -49,8 +50,9 @@ def test_alert_starts_at_reminder_time(fix: ReminderFixture) -> None:
 
 
 def test_alert_continues_past_reminder_time(fix: ReminderFixture) -> None:
-    fix.clock.set_time(14, 5)
+    fix.clock.set_time(13, 0)
     reminder = fix.create()
+    fix.clock.set_time(14, 5)
 
     reminder.tick()
 
@@ -108,23 +110,26 @@ def test_dismissed_resets_next_day(fix: ReminderFixture) -> None:
 
 
 def test_second_alert_fires_after_first_dismissed(fix: ReminderFixture) -> None:
-    fix.clock.set_time(16, 0)
+    fix.clock.set_time(13, 0)
     reminder = fix.create(reminder_times=[(14, 0), (16, 0)])
+    fix.clock.set_time(14, 0)
 
     reminder.tick()           # 14:00 alert is active and alerting
     fix.button.press()
     reminder.tick()           # 14:00 alert dismissed
     fix.button.release()
 
-    # 16:00 alert is now due and not dismissed — should alert
+    # Advance to 16:00 — second alert fires
+    fix.clock.set_time(16, 0)
     reminder.tick()
     assert fix.buzzer.on is True
     assert fix.led.on is True
 
 
 def test_only_earliest_alert_fires_when_both_due(fix: ReminderFixture) -> None:
-    fix.clock.set_time(16, 0)
+    fix.clock.set_time(13, 0)
     reminder = fix.create(reminder_times=[(14, 0), (16, 0)])
+    fix.clock.set_time(16, 0)
 
     reminder.tick()  # first tick — only 14:00 alert should be active
     assert fix.buzzer.on is True
@@ -187,9 +192,20 @@ def test_each_alert_resets_independently_next_day(fix: ReminderFixture) -> None:
     assert fix.led.on is True
 
 
-def test_alert_toggles_on_each_tick(fix: ReminderFixture) -> None:
-    fix.clock.set_time(14, 0)
+def test_no_alert_if_powered_on_after_reminder_time(fix: ReminderFixture) -> None:
+    fix.clock.set_time(15, 0)  # powered on an hour after 14:00 reminder
     reminder = fix.create()
+
+    reminder.tick()
+
+    assert fix.buzzer.on is False
+    assert fix.led.on is False
+
+
+def test_alert_toggles_on_each_tick(fix: ReminderFixture) -> None:
+    fix.clock.set_time(13, 0)
+    reminder = fix.create()
+    fix.clock.set_time(14, 0)
 
     reminder.tick()  # first tick — on
     assert fix.buzzer.on is True
