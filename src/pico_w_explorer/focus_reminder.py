@@ -43,7 +43,7 @@ class FocusReminder:
                 state.dismiss(today)
 
     def tick(self) -> None:
-        hour, minute, _second = self._clock.current_time()
+        hour, minute, _ = self._clock.current_time()
         today = self._clock.current_date()
 
         for state in self._states:
