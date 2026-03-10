@@ -36,7 +36,7 @@ class FocusReminder:
         self._button = button
         self._states = [AlertState(h, m) for h, m in reminder_times]
         self._alert_on = False
-        hour, minute, _second = clock.current_time()
+        hour, minute, _ = clock.current_time()
         today = clock.current_date()
         for state in self._states:
             if state.is_due(hour, minute):
