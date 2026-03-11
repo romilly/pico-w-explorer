@@ -37,7 +37,7 @@ class Application:
         self._reminder_times = sorted(config.reminder_times)
         self._tick_interval = config.tick_interval
         self._status = Text(self._display, 3, 20, width=120)
-        self._time_display = Text(self._display, 160, 20, width=140)
+        self._time_display = Text(self._display, 200, 20, width=100)
         self._reminders = Text(self._display, 3, 60, width=120, text_spec=TextSpec(colour=BLUE))
         self._times = Text(self._display, 3, 100, width=230, text_spec=TextSpec(colour=RED))
 
@@ -47,8 +47,8 @@ class Application:
         return self.WEEKDAYS[self._clock.weekday()]
 
     def _format_current_time(self) -> str:
-        hour, minute, second = self._clock.current_time()
-        return "%02d:%02d:%02d" % (hour, minute, second)
+        hour, minute, _ = self._clock.current_time()
+        return "%02d:%02d" % (hour, minute)
 
     def _format_times(self) -> str:
         parts = ", ".join("%02d:%02d" % (h, m) for h, m in self._reminder_times)
@@ -74,7 +74,9 @@ class Application:
         )
 
     def tick(self) -> None:
-        self._time_display.text(self._format_current_time())
+        _, _, second = self._clock.current_time()
+        if second == 0:
+            self._time_display.text(self._format_current_time())
         self._reminder.tick()
 
     def run(self) -> None:

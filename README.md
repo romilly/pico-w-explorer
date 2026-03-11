@@ -9,7 +9,7 @@ A daily focus reminder that flashes the onboard LED and beeps the buzzer at conf
 Currently configured for reminders at 12:45, 14:00 and 16:00 UTC.
 
 The display shows:
-- **Top line**: weekday name with a live clock (HH:MM:SS, updates every tick)
+- **Top line**: weekday name with a live clock (HH:MM, updates each minute)
 - **Reminders label** in blue
 - **Reminder times** in red
 
