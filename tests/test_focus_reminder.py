@@ -14,12 +14,17 @@ class ReminderFixture:
         self.led = FakeLed()
         self.button = FakeButton()
 
-    def create(self, reminder_times: list[tuple[int, int]] | None = None) -> FocusReminder:
+    def create(
+        self,
+        reminder_times: list[tuple[int, int]] | None = None,
+        alert_duration: int = 20,
+    ) -> FocusReminder:
         if reminder_times is None:
             reminder_times = [(14, 0)]
         return FocusReminder(
             self.clock, self.buzzer, self.led, self.button,
             reminder_times=reminder_times,
+            alert_duration=alert_duration,
         )
 
 
@@ -200,6 +205,41 @@ def test_no_alert_if_powered_on_after_reminder_time(fix: ReminderFixture) -> Non
 
     assert fix.buzzer.on is False
     assert fix.led.on is False
+
+
+def test_alert_auto_dismisses_after_duration(fix: ReminderFixture) -> None:
+    fix.clock.set_time(13, 0)
+    reminder = fix.create(alert_duration=4)
+    fix.clock.set_time(14, 0)
+
+    for _ in range(4):
+        reminder.tick()
+
+    # After 4 ticks, alert should be auto-dismissed
+    reminder.tick()
+    assert fix.buzzer.on is False
+    assert fix.led.on is False
+
+    # Should stay dismissed
+    reminder.tick()
+    assert fix.buzzer.on is False
+    assert fix.led.on is False
+
+
+def test_auto_dismiss_lets_next_alert_fire(fix: ReminderFixture) -> None:
+    fix.clock.set_time(13, 0)
+    reminder = fix.create(reminder_times=[(14, 0), (16, 0)], alert_duration=4)
+    fix.clock.set_time(14, 0)
+
+    # Let first alert auto-dismiss
+    for _ in range(5):
+        reminder.tick()
+
+    # Advance to 16:00 — second alert should fire
+    fix.clock.set_time(16, 0)
+    reminder.tick()
+    assert fix.buzzer.on is True
+    assert fix.led.on is True
 
 
 def test_alert_toggles_on_each_tick(fix: ReminderFixture) -> None:

@@ -29,6 +29,7 @@ class FocusReminder:
         led: LedPort,
         button: ButtonPort,
         reminder_times: list[tuple[int, int]],
+        alert_duration: int = 20,
     ) -> None:
         self._clock = clock
         self._buzzer = buzzer
@@ -36,6 +37,8 @@ class FocusReminder:
         self._button = button
         self._states = [AlertState(h, m) for h, m in reminder_times]
         self._alert_on = False
+        self._alert_duration = alert_duration
+        self._alert_ticks = 0
         hour, minute, _ = clock.current_time()
         today = clock.current_date()
         for state in self._states:
@@ -53,11 +56,20 @@ class FocusReminder:
 
         if active is None:
             self._alert_off()
+            self._alert_ticks = 0
             return
 
         if self._button.is_pressed():
             active.dismiss(today)
             self._alert_off()
+            self._alert_ticks = 0
+            return
+
+        self._alert_ticks += 1
+        if self._alert_ticks > self._alert_duration:
+            active.dismiss(today)
+            self._alert_off()
+            self._alert_ticks = 0
             return
 
         if self._alert_on:
