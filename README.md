@@ -4,7 +4,7 @@ Code for the Pimoroni Pico W Explorer board.
 
 ## Focus Reminder
 
-A daily focus reminder that flashes the onboard LED and beeps the buzzer at configured times. Supports multiple independently-dismissible alerts per day. Press Button A to dismiss the current alert. Each alert resets automatically the next day. Alerts that are already past when the device powers on are silently skipped.
+A daily focus reminder that flashes the onboard LED and beeps the buzzer at configured times. Supports multiple independently-dismissible alerts per day. Press Button A to dismiss the current alert, or it auto-dismisses after 10 seconds. Each alert resets automatically the next day. Alerts that are already past when the device powers on are silently skipped.
 
 Currently configured for reminders at 12:45, 14:00 and 16:00 UTC.
 
@@ -40,7 +40,7 @@ tests/
 docs/
     tick-driven-testing.md  # Integration testing pattern
 plan/
-    progress-2026-03-10.md  # Latest progress report
+    progress-2026-03-11.md  # Latest progress report
 ```
 
 ## Deployment
