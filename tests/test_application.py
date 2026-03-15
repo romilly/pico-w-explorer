@@ -80,6 +80,18 @@ def test_tick_does_not_update_time_mid_minute() -> None:
     assert_that(len(builder.display.texts), equal_to(texts_after_start))
 
 
+def test_tick_updates_weekday_on_day_change() -> None:
+    builder = ApplicationBuilder().with_weekday(1)  # Tuesday
+    app = builder.build()
+    app.start()
+    builder.clock.set_weekday(2)  # Wednesday
+    builder.clock.set_time(0, 0, 0)
+
+    app.tick()
+
+    assert_that(builder.display.texts[-1], equal_to("Wednesday"))
+
+
 def test_tick_activates_alert_at_reminder_time() -> None:
     builder = ApplicationBuilder().with_time(13, 0)
     app = builder.build()

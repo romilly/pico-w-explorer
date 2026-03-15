@@ -54,8 +54,8 @@ class Application:
         parts = ", ".join("%02d:%02d" % (h, m) for h, m in self._reminder_times)
         return parts
     
-    def status(self, contents: str):
-        self._status.text(contents)
+    def weekday(self) -> None:
+        self._status.text(self._format_weekday())
 
     def reminders(self):
         self._reminders.text("Reminders:")
@@ -64,7 +64,8 @@ class Application:
         self._times.text(times)
 
     def start(self) -> None:
-        self.status(self._format_weekday())
+        self._current_weekday = self._clock.weekday()
+        self.weekday()
         self.reminders()
         self.times(self._format_times())
         self._time_display.text(self._format_current_time())
@@ -77,6 +78,10 @@ class Application:
         _, _, second = self._clock.current_time()
         if second == 0:
             self._time_display.text(self._format_current_time())
+        weekday = self._clock.weekday()
+        if weekday != self._current_weekday:
+            self._current_weekday = weekday
+            self.weekday()
         self._reminder.tick()
 
     def run(self) -> None:
