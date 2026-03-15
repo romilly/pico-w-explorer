@@ -6,6 +6,9 @@ from tests.adapters.fake_button import FakeButton
 from tests.adapters.fake_clock import FakeClock
 from tests.adapters.fake_led import FakeLed
 
+TWO_PM: tuple[int, int] = (14, 0)
+SINGLE_REMINDER: list[tuple[int, int]] = [TWO_PM]
+
 
 class ReminderFixture:
     def __init__(self) -> None:
@@ -16,11 +19,9 @@ class ReminderFixture:
 
     def create(
         self,
-        reminder_times: list[tuple[int, int]] | None = None,
+        reminder_times: list[tuple[int, int]],
         alert_duration: int = 20,
     ) -> FocusReminder:
-        if reminder_times is None:
-            reminder_times = [(14, 0)]
         return FocusReminder(
             self.clock, self.buzzer, self.led, self.button,
             reminder_times=reminder_times,
@@ -33,9 +34,18 @@ def fix() -> ReminderFixture:
     return ReminderFixture()
 
 
-def test_no_alert_before_reminder_time(fix: ReminderFixture) -> None:
+@pytest.fixture
+def reminder(fix: ReminderFixture) -> FocusReminder:
+    return fix.create(SINGLE_REMINDER)
+
+
+@pytest.fixture
+def short_reminder(fix: ReminderFixture) -> FocusReminder:
+    return fix.create(SINGLE_REMINDER, alert_duration=4)
+
+
+def test_no_alert_before_reminder_time(fix: ReminderFixture, reminder: FocusReminder) -> None:
     fix.clock.set_time(13, 0)
-    reminder = fix.create()
 
     reminder.tick()
 
@@ -43,9 +53,7 @@ def test_no_alert_before_reminder_time(fix: ReminderFixture) -> None:
     assert fix.led.on is False
 
 
-def test_alert_starts_at_reminder_time(fix: ReminderFixture) -> None:
-    fix.clock.set_time(13, 0)
-    reminder = fix.create()
+def test_alert_starts_at_reminder_time(fix: ReminderFixture, reminder: FocusReminder) -> None:
     fix.clock.set_time(14, 0)
 
     reminder.tick()
@@ -54,9 +62,7 @@ def test_alert_starts_at_reminder_time(fix: ReminderFixture) -> None:
     assert fix.led.on is True
 
 
-def test_alert_continues_past_reminder_time(fix: ReminderFixture) -> None:
-    fix.clock.set_time(13, 0)
-    reminder = fix.create()
+def test_alert_continues_past_reminder_time(fix: ReminderFixture, reminder: FocusReminder) -> None:
     fix.clock.set_time(14, 5)
 
     reminder.tick()
@@ -65,9 +71,8 @@ def test_alert_continues_past_reminder_time(fix: ReminderFixture) -> None:
     assert fix.led.on is True
 
 
-def test_button_press_dismisses_alert(fix: ReminderFixture) -> None:
+def test_button_press_dismisses_alert(fix: ReminderFixture, reminder: FocusReminder) -> None:
     fix.clock.set_time(14, 0)
-    reminder = fix.create()
 
     reminder.tick()  # starts alerting
     fix.button.press()
@@ -77,9 +82,8 @@ def test_button_press_dismisses_alert(fix: ReminderFixture) -> None:
     assert fix.led.on is False
 
 
-def test_alert_stays_dismissed_after_button_release(fix: ReminderFixture) -> None:
+def test_alert_stays_dismissed_after_button_release(fix: ReminderFixture, reminder: FocusReminder) -> None:
     fix.clock.set_time(14, 0)
-    reminder = fix.create()
 
     reminder.tick()  # starts alerting
     fix.button.press()
@@ -91,9 +95,8 @@ def test_alert_stays_dismissed_after_button_release(fix: ReminderFixture) -> Non
     assert fix.led.on is False
 
 
-def test_dismissed_resets_next_day(fix: ReminderFixture) -> None:
+def test_dismissed_resets_next_day(fix: ReminderFixture, reminder: FocusReminder) -> None:
     fix.clock.set_time(14, 0)
-    reminder = fix.create()
 
     reminder.tick()  # starts alerting
     fix.button.press()
@@ -199,7 +202,7 @@ def test_each_alert_resets_independently_next_day(fix: ReminderFixture) -> None:
 
 def test_no_alert_if_powered_on_after_reminder_time(fix: ReminderFixture) -> None:
     fix.clock.set_time(15, 0)  # powered on an hour after 14:00 reminder
-    reminder = fix.create()
+    reminder = fix.create(SINGLE_REMINDER)
 
     reminder.tick()
 
@@ -207,21 +210,19 @@ def test_no_alert_if_powered_on_after_reminder_time(fix: ReminderFixture) -> Non
     assert fix.led.on is False
 
 
-def test_alert_auto_dismisses_after_duration(fix: ReminderFixture) -> None:
-    fix.clock.set_time(13, 0)
-    reminder = fix.create(alert_duration=4)
+def test_alert_auto_dismisses_after_duration(fix: ReminderFixture, short_reminder: FocusReminder) -> None:
     fix.clock.set_time(14, 0)
 
     for _ in range(4):
-        reminder.tick()
+        short_reminder.tick()
 
     # After 4 ticks, alert should be auto-dismissed
-    reminder.tick()
+    short_reminder.tick()
     assert fix.buzzer.on is False
     assert fix.led.on is False
 
     # Should stay dismissed
-    reminder.tick()
+    short_reminder.tick()
     assert fix.buzzer.on is False
     assert fix.led.on is False
 
@@ -242,9 +243,7 @@ def test_auto_dismiss_lets_next_alert_fire(fix: ReminderFixture) -> None:
     assert fix.led.on is True
 
 
-def test_alert_toggles_on_each_tick(fix: ReminderFixture) -> None:
-    fix.clock.set_time(13, 0)
-    reminder = fix.create()
+def test_alert_toggles_on_each_tick(fix: ReminderFixture, reminder: FocusReminder) -> None:
     fix.clock.set_time(14, 0)
 
     reminder.tick()  # first tick — on
