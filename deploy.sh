@@ -23,6 +23,7 @@ mpremote \
     cp src/pico_w_explorer/text_spec.py :pico_w_explorer/text_spec.py + \
     cp src/pico_w_explorer/widgets.py :pico_w_explorer/widgets.py + \
     cp src/pico_w_explorer/focus_reminder.py :pico_w_explorer/focus_reminder.py + \
+    cp src/pico_w_explorer/bst_gmt.py :pico_w_explorer/bst_gmt.py + \
     cp src/pico_w_explorer/ports/*.py :pico_w_explorer/ports/ + \
     cp src/pico_w_explorer/adapters/*.py :pico_w_explorer/adapters/ + \
     cp src/pico_w_explorer/main.py :main.py + \
